@@ -1,0 +1,458 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+</head>
+<body>
+    <nav id="bar">
+        <div id="topbarLeft">
+            <label style="font-size: 2vw;margin-left: 1vw;">雙和醫院疼痛照護個案管理系統<label style="font-size: 1.5vw;margin-left: 1vw;" >v20230214</label></label>
+        </div>
+        <button style="margin-top: 1vh;" onclick="jump();">回上一頁</button>
+    </nav>
+    <section style="margin-top: 3vh; display:flex; flex-direction:column; gap:1vh; height:130vh;">
+        <a href="https://docs.google.com/spreadsheets/d/1KegCNh0O4kP7cdZCDY2Ii0QoS2xpPU4fzOSclBsEICo/edit?usp=sharing">https://docs.google.com/spreadsheets/d/1KegCNh0O4kP7cdZCDY2Ii0QoS2xpPU4fzOSclBsEICo/edit?usp=sharing</a>
+        <div>輸入病歷號：
+            <input value="" style="width:100px;" placeholder="請輸入病歷號" id="patientID">
+            <button id="search" onclick="showMessage()">搜尋</button>
+            <div id="idDiv" style="display:none;width:100px;"></div>
+            <button id="change" style="display:none;" onclick="change()">更改</button>
+        </div>
+        <div style="height:8vh;">
+            <div id="name">
+    
+            </div>
+            <div id="introP">
+                
+            </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:1vh;">
+            <div style="display:flex; justify-content: space-around;">
+                <div class="part">
+                    <div>疼痛個案管理師</div>
+                    <div class="table">
+                        <table id="tableOne">
+                        
+                        </table> 
+                    </div>
+                    <div style="display:flex;gap:1vw;">
+                        <input value="" style="width:23vw" placeholder="請輸入留言" id="messageOne">
+                        <button id="One" onclick="sendMessage(this.id,'疼痛個案管理師')">傳送</button>
+                    </div>
+                    
+                </div>
+                <div class="part">
+                    <div>復健科</div>
+                    <div class="table">
+                        <table id="tableTwo">
+                         
+                        </table> 
+                    </div>
+                    <div style="display:flex;gap:1vw;">
+                        <input value="" style="width:23vw" placeholder="請輸入留言" id="messageTwo">
+                        <button id="Two" onclick="sendMessage(this.id,'復健科')">傳送</button>
+                    </div>
+                    
+                </div>
+                <div class="part">
+                    <div>麻醉科</div>
+                    <div class="table">
+                        <table id="tableThree">
+                         
+                        </table> 
+                    </div>
+                    <div style="display:flex;gap:1vw;">
+                        <input value="" style="width:23vw" placeholder="請輸入留言" id="messageThree">
+                        <button id="Three" onclick="sendMessage(this.id,'麻醉科')">傳送</button>
+                    </div>
+                    
+                </div>
+            </div>
+            <div style="display:flex; justify-content: space-around;">
+                <div class="part">
+                    <div>藥劑部</div>
+                    <div class="table">
+                        <table id="tableFour">
+                        
+                        </table>
+                    </div>
+                    <div style="display:flex;gap:1vw;">
+                        <input value="" style="width:23vw" placeholder="請輸入留言" id="messageFour">
+                        <button id="Four" onclick="sendMessage(this.id,'藥劑部')">傳送</button>
+                    </div>
+                    
+                </div>
+                <div class="part">
+                    <div>護理部</div>
+                    <div class="table">
+                        <table id="tableFive">
+                        
+                        </table>
+                    </div>
+                    <div style="display:flex;gap:1vw;">
+                        <input value="" style="width:23vw" placeholder="請輸入留言" id="messageFive">
+                        <button id="Five" onclick="sendMessage(this.id,'護理部')">傳送</button>
+                    </div>
+                    
+                </div>
+                <div class="part">
+                    <div>病人主治醫師</div>
+                    <div class="table">
+                        <table id="tableSix">
+                        
+                        </table>
+                    </div>
+                    <div style="display:flex;gap:1vw;">
+                        <input value="" style="width:23vw" placeholder="請輸入留言" id="messageSix">
+                        <button id="Six" onclick="sendMessage(this.id,'病人主治醫師')">傳送</button>
+                    </div>
+                    
+                </div>
+            </div>
+            <div style="display:flex; justify-content: space-around;">
+                <div class="part">
+                    <div>精神科</div>
+                    <div class="table">
+                        <table id="tableSeven">
+                        
+                        </table>
+                    </div>
+                    <div style="display:flex;gap:1vw;">
+                        <input value="" style="width:23vw" placeholder="請輸入留言" id="messageSeven">
+                        <button id="Seven" onclick="sendMessage(this.id,'精神科')">傳送</button>
+                    </div>
+                    
+                </div>
+                <div class="part">
+                    <div>其他</div>
+                    <div class="table">
+                        <table id="tableEight">
+                        
+                        </table>
+                    </div>
+                    <div style="display:flex;gap:1vw;">
+                        <input value="" style="width:23vw" placeholder="請輸入留言" id="messageEight">
+                        <button id="Eight" onclick="sendMessage(this.id,'其他')">傳送</button>
+                    </div>
+                    
+                </div>
+                <div class="part">
+                    <div>尚未安排</div>
+                    <div class="table">
+                        <table id="tableNine">
+                        
+                        </table>
+                    </div>
+                    <div style="display:flex;gap:1vw;">
+                        <input value="" style="width:23vw" placeholder="請輸入留言" id="messageNine" disabled>
+                        <button id="Nine" onclick="sendMessage(this.id,'')" disabled>傳送</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+</body>
+<script>
+    
+    function sendMessage(id,department){
+        let patientID = document.getElementById("patientID").value;
+        
+
+        if(patientID==""){
+            alert("請輸入病歷號")
+            return;
+        }
+        
+        let tableID = "table"+id;
+        let inputID = "message"+id;
+        
+        let message = document.getElementById(inputID).value;
+
+        let year = new Date().getFullYear();
+        let month = parseInt(new Date().getMonth(),10)+1;
+        let date = new Date().getDate();
+        
+        month = unitsDigit(month);
+        date = unitsDigit(date);
+        let day = year.toString() +"/"+ month.toString() +"/"+ date.toString();
+
+        let hour = new Date().getHours();
+        let minute = new Date().getMinutes();
+
+        hour = unitsDigit(hour)
+        minute = unitsDigit(minute)
+        let time = hour.toString() +":"+ minute.toString();
+
+        let table = document.getElementById(tableID);
+
+        let rowMes = table.insertRow(0);
+        let cellMes = rowMes.insertCell(0);
+        cellMes.innerHTML = message;
+        cellMes.setAttribute("class","mes");
+        
+        let rowTime = table.insertRow(0);
+        let cellTime = rowTime.insertCell(0);
+        cellTime.innerHTML = day+" "+time
+        cellTime.setAttribute("class","time");
+
+        console.log(day)
+        $.ajax({
+        
+            url: "https://script.google.com/macros/s/AKfycbwVoriYOJyZ3efNk45ckIDnqPBJpWH4BLac0uVK3rs6EJLJy4ro0yNAkapZ7kfaaMXA/exec",
+            data: {
+                "func":"send",
+                "patientID":patientID,
+                "department":department,
+                "date":day,
+                "time":time,
+                "message":message,
+            },
+            success: function(response) {
+                
+            },
+        });
+        
+    }
+
+    function showMessage(){
+        let patientID = document.getElementById("patientID").value;
+        if(patientID==""){
+            alert("請輸入病歷號")
+            return;
+        }
+
+        document.getElementById("idDiv").innerHTML = patientID;
+        document.getElementById("idDiv").style.display = "inline-block";
+        document.getElementById("change").style.display = "inline-block";
+        document.getElementById("search").style.display = "none";
+        document.getElementById("patientID").style.display = "none";
+
+        let url = "https://sheets.googleapis.com/v4/spreadsheets/1KegCNh0O4kP7cdZCDY2Ii0QoS2xpPU4fzOSclBsEICo/values/"+patientID+"?key=AIzaSyCVWWBJV268_S8ax4LIMH7If5yvgKKK91Y";
+        $.getJSON(url, function(json) {
+            document.getElementById("tableOne").innerHTML = "";
+            document.getElementById("tableTwo").innerHTML = "";
+            document.getElementById("tableThree").innerHTML = "";
+            document.getElementById("tableFour").innerHTML = "";
+            document.getElementById("tableFive").innerHTML = "";
+            document.getElementById("tableSix").innerHTML = "";
+            document.getElementById("tableSeven").innerHTML = "";
+            document.getElementById("tableEight").innerHTML = "";
+
+            document.getElementById("messageOne").value = "";
+            document.getElementById("messageTwo").value = "";
+            document.getElementById("messageThree").value = "";
+            document.getElementById("messageFour").value = "";
+            document.getElementById("messageFive").value = "";
+            document.getElementById("messageSix").value = "";
+            document.getElementById("messageSeven").value = "";
+            document.getElementById("messageEight").value = "";
+
+
+            let values = json.values; // 所有試算表資料
+            document.getElementById("name").innerHTML = values[0][0]
+            let introP = "";
+            for(let lenP = 1; lenP < values[0].length; lenP++){
+                introP += values[0][lenP]+"&emsp;&emsp;";
+            }
+            document.getElementById("introP").innerHTML = introP;
+            for(let lenMes = 2; lenMes < values.length; lenMes++){
+                let id =
+                values[lenMes][0] == "疼痛個案管理師"      
+                ? "One"   
+                : values[lenMes][0] == "復健科"
+                ? "Two"
+                : values[lenMes][0] == "麻醉科"
+                ? "Three"
+                : values[lenMes][0] == "藥劑部"
+                ? "Four"
+                : values[lenMes][0] == "護理部"
+                ? "Five"
+                : values[lenMes][0] == "病人主治醫師"
+                ? "Six"
+                : values[lenMes][0] == "精神科"
+                ? "Seven"
+                : "Eight";
+                let tableID = "table"+id;
+                let table = document.getElementById(tableID);
+
+                let rowMes = table.insertRow(0);
+                let cellMes = rowMes.insertCell(0);
+                cellMes.innerHTML = values[lenMes][3];
+                cellMes.setAttribute("class","mes");
+                
+                let rowTime = table.insertRow(0);
+                let cellTime = rowTime.insertCell(0);
+                let dayArr = values[lenMes][1].split("/")
+                dayArr[1] = unitsDigit(dayArr[1]);
+                dayArr[2] = unitsDigit(dayArr[2]);
+                let dayStr = dayArr[0]+"/"+dayArr[1]+"/"+dayArr[2]
+                
+                // let timeArr = values[lenMes][2].split(":")
+                // timeArr[0] = unitsDigit(timeArr[0]);
+                // timeArr[1] = unitsDigit(timeArr[1]);
+                // let timeStr = timeArr[0]+":"+timeArr[1]
+                
+                cellTime.innerHTML = dayStr+" "+values[lenMes][2];
+                cellTime.setAttribute("class","time");
+                }
+        })
+        .fail(function() { 
+            document.getElementById("idDiv").innerHTML = "";
+            document.getElementById("idDiv").style.display = "none";
+            document.getElementById("change").style.display = "none";
+            document.getElementById("search").style.display = "inline-block";
+            document.getElementById("patientID").style.display = "inline-block";
+            document.getElementById("patientID").value = "";
+            alert("尚未有此病患資訊"); 
+        });
+        
+    }
+
+    function change(){
+        document.getElementById("idDiv").innerHTML = "";
+        document.getElementById("idDiv").style.display = "none";
+        document.getElementById("change").style.display = "none";
+        document.getElementById("search").style.display = "inline-block";
+        document.getElementById("patientID").style.display = "inline-block";
+    }
+
+    function unitsDigit(num){
+        console.log(num)
+        if(Math.floor(num/10)==0 && num!=0){
+            num = "0" + num.toString()
+        }
+        return num
+    }
+
+    function jump(){
+        window.location.href="./index.html";
+    }
+
+    // console.log(parent)
+    function getArgs() { 
+        let args = new Map(); 
+        //in this case: 
+        //location = b.htm?aa=1&bb=abc&cc=測試" 
+        //locatin.search = ?aa=1&bb=abc&cc=測試" 
+        let query = location.search.substring(1); //aa=1&bb=abc&cc=測試" 
+        // console.log(parent.location.search)
+        let pairs = query.split("&"); 
+        for(let i=0;i<pairs.length;i++) { 
+            let pos = pairs[i].indexOf("="); 
+            if (pos == -1) continue; 
+            let argname = pairs[i].substring(0,pos); 
+            let value = pairs[i].substring(pos+1); 
+                    args.set(argname,decodeURIComponent(value)); 
+        } 
+        return args; 
+    } 
+
+    // let passID = getArgs().get("patientID");
+    // window.addEventListener('patientID', receiveMessage, false);
+    // function receiveMessage(e) {
+
+    //         // 拿傳來的參數（e.data）
+    //         const data = e.data;
+    //         console.log(data)
+    // }
+    // console.log(passID)
+    let passID = localStorage.getItem("patientID");
+
+    if(passID != undefined){
+        document.getElementById("idDiv").innerHTML = passID;
+        document.getElementById("idDiv").style.display = "inline-block";
+        document.getElementById("change").style.display = "inline-block";
+        document.getElementById("search").style.display = "none";
+        document.getElementById("patientID").style.display = "none";
+        document.getElementById("patientID").value = passID;
+        showMessage();
+    }
+
+</script>
+<style>
+    body{
+        font-family: 'Balsamiq Sans', 'Microsoft JhengHei';
+        color:#3f3d38
+    }
+    .part{
+        width:32vw;
+        background-color: rgb(207, 222, 237);
+        height: 38vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        border-radius: 3%;
+    }
+    .table{
+        width:30vw;
+        background-color: rgb(255, 255, 255);
+        height: 27vh;
+        z-index: 3;
+        align-items: center;
+        overflow-x: hidden;
+        overflow-y: overlay;
+    }
+    .table table{
+        width:29vw;
+        border-spacing: 0;
+        gap:0.5vh;
+        padding: 0.5vh;
+    }
+    .table tbody{
+        width:29vw;
+        gap:1vh;
+    }
+    .table tr{
+        width:29vw;
+        height:3vh;
+    }
+    .table td{
+        width:8vw;
+        text-align: left;
+        word-break:break-all;
+    }
+    .time{
+        font-size: 2.3vh;
+        height: 2.3vh;
+        color:rgb(146, 135, 129);
+        font-weight: bold;
+        margin-top: 5vh;
+    }
+    .mes{
+        font-size: 3vh;
+        height: 3vh;
+        color:rgb(44, 43, 42);
+        margin-bottom: 5vh;
+    }
+    #name{
+        font-size: 4vh;
+    }
+    #bar {
+        position: fixed;
+        height: 7vh;
+        background: #ecdab5;
+        z-index: 99999;
+        display: flex; 
+        width: 100vw; 
+        justify-content: left;
+        align-items: center;
+        top: 0;
+        left: 0;
+    }
+    #topbarLeft{
+        display: flex; 
+        width: 40vw; 
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1vh;
+        margin-left: 2vw;
+    }
+    a{
+        text-decoration: none;
+    }
+</style>
+</html>

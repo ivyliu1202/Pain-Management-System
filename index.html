@@ -1,0 +1,423 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+</head>
+<body>
+    <nav id="bar">
+        <div id="topbarLeft">
+            <label style="font-size: 2vw;margin-left: 1vw;">雙和醫院疼痛照護個案管理系統<label style="font-size: 1.5vw;margin-left: 1vw;" >v20230214</label></label>
+        </div>
+        
+    </nav>
+    <section style="margin-top: 3vh; display:flex; flex-direction:column; gap:3vh; height:50vh;" onchange="showClinicData()">
+        <a href="https://docs.google.com/spreadsheets/d/1h0Q84t8Q6GvPLntde07T1s8uL8lOCXFa15Xs8oczj0A/edit?usp=sharing">https://docs.google.com/spreadsheets/d/1h0Q84t8Q6GvPLntde07T1s8uL8lOCXFa15Xs8oczj0A/edit?usp=sharing</a>
+        <select id="month" style="width:10vw;">
+            <option value="thisMonth">本月</option>
+            <option value="lastMonth">上個月</option>
+            <option value="today">今日</option>
+            <option value="yesterday">昨日</option>
+
+        </select>
+        <!-- <button onclick="showClinicData()" id="checkPain">查看住院資料</button> -->
+        <div id="tableDiv">
+            <table id="hospitalTable">
+                <tr>
+                    <th>收案日期</th>
+                    <th>病歷號</th>
+                    <th>姓名</th>
+                    <th>床號</th>
+                    <th>住院日期</th>
+                    <th>主診斷</th>
+                    <th>收案疼痛分數</th>
+                    <th>今日疼痛分數</th>
+                    <th>跨團隊會議日期</th>
+                    <th>結案日期</th>
+                    <th>出院日期</th>
+                    <th>功能</th>
+                </tr>
+            </table>
+        </div>
+        
+    </section>
+    <section style="margin-top: 5vh; display:flex; flex-direction:column; gap:2vh; height:20vh;">
+        <div style="font-size: 1.5vw;">疼痛照護跨團隊會議</div>
+        <div id="hospitalMeetTableDiv">
+            <table id="hospitalMeetTable" style="width:60vw;">
+                <tr>
+                    <th>日期</th>
+                    <th>會議記錄</th>
+                </tr>
+            </table>
+        </div>
+        
+    </section>
+    
+    
+</body>
+<style>
+    body{
+        font-family: 'Balsamiq Sans', 'Microsoft JhengHei';
+        color:#3f3d38
+    }
+    #tableDiv{
+        overflow-y: auto;
+        height:70vh;
+    }
+    table{
+        border-spacing: 0;
+        color: #6b675d;
+    }
+
+    th{
+        background-color: #e7e3dc;
+        width:8vw;
+        border: 1px dotted #6b675d;
+    }
+
+    td{
+        background-color:#f7f5f1;
+        width:8vw;
+        text-align:center;
+        border: 1px dotted #6b675d;
+        padding: 0.5vh 0;
+    }
+    #bar {
+        position: fixed;
+        height: 7vh;
+        background: #ecdab5;
+        z-index: 99999;
+        display: flex; 
+        width: 100vw; 
+        justify-content: left;
+        align-items: center;
+        top: 0;
+        left: 0;
+    }
+    #topbarLeft{
+        display: flex; 
+        width: 40vw; 
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1vh;
+        margin-left: 2vw;
+    }
+    #checkPain{
+        width: 10vw;
+    }
+    .btn{
+        margin: 0.3vh;
+    }
+    #hospitalMeetTableDiv{
+        /* height:15vh; */
+        /* overflow-y: auto; */
+        width:61.5vw;
+    }
+    a{
+        text-decoration: none;
+        color: black;
+    }
+</style>
+<script>
+    
+    let values;
+    // let clickArr = []
+    let clickFlag = 0;
+
+    function showClinicData(){
+        clickFlag = 0;
+        let url = "https://sheets.googleapis.com/v4/spreadsheets/1h0Q84t8Q6GvPLntde07T1s8uL8lOCXFa15Xs8oczj0A/values/住院資料?key=AIzaSyBAnKuvS0GKWZLDF5WO6doy9sFcGtI2YsQ";
+
+        $.getJSON(url, function(json) {
+            values = json.values; // 所有試算表資料
+            let table = document.getElementById("hospitalTable")
+            table.innerHTML = "<tr><th>收案日期</th><th>病歷號</th><th>姓名</th><th>床號</th><th>住院日期</th><th>主診斷</th><th>收案疼痛分數</th><th>今日疼痛分數</th><th>跨團隊會議日期</th><th>結案日期</th><th>出院日期</th><th>功能</th></tr>"; 
+            for(let rowNum = 1; rowNum < values.length; rowNum++){
+                let rows = values[rowNum];
+                let nowMonth = parseInt(new Date().getMonth(),10)+1;
+                let getMonth = parseInt(values[rowNum][0].charAt(3))*10+parseInt(values[rowNum][0].charAt(4))
+                let selectMonth = document.getElementById("month").value;
+
+                let getDay = ADYear(values[rowNum][0]);
+                let month = (parseInt(new Date().getMonth(),10)+1).toString()
+                let day = new Date().getDate().toString()
+                
+
+                let today = new Date().getFullYear().toString()+"/"+month+"/"+day
+                
+                let hourDiff = diff(today,getDay,"hour")
+                
+
+                if(selectMonth=="thisMonth"){
+                    if(getMonth==nowMonth){
+                        let tr = createTD(values,rowNum);
+                        table.appendChild(tr);
+                    }
+                }
+                else if(selectMonth=="lastMonth"){
+                    if(nowMonth==1 && getMonth==12){
+                        let tr = createTD(values,rowNum);
+                        table.appendChild(tr);
+                    }
+                    else if(getMonth==nowMonth-1){
+                        let tr = createTD(values,rowNum);
+                        table.appendChild(tr);
+                    }
+                }
+                else if(selectMonth=="today"){
+                    if(getDay==today){
+                        let tr = createTD(values,rowNum);
+                        table.appendChild(tr);
+                    }
+                }
+                else if(selectMonth=="yesterday"){
+                    console.log(hourDiff)
+                    if(getDay!=today && hourDiff>0 && hourDiff<48){
+                        let tr = createTD(values,rowNum);
+                        table.appendChild(tr);
+                    }
+                }
+            };
+            // if(clickFlag==0){
+                
+            //     initArr();
+                
+            // }
+        });
+        
+        
+        
+    }
+
+    function createTD(values,rowNum){
+        let caseDate = date(values[rowNum][0])
+        let id = values[rowNum][1]
+        let name = values[rowNum][2]
+        let bed = values[rowNum][3]
+        let inDate = date(values[rowNum][4])
+        let symptom = values[rowNum][5]
+        let casePainNum = values[rowNum][6]
+        let todayPainNum = values[rowNum][7]
+        let meetDate = date(values[rowNum][8])
+        let endDate = date(values[rowNum][9])
+        let outDate = date(values[rowNum][10])
+        let tdArr = [caseDate,id,name,bed,inDate,symptom,casePainNum,todayPainNum,meetDate,endDate,outDate]
+        let tr = document.createElement("tr");
+        for(let tdNum = 0; tdNum < tdArr.length; tdNum ++){
+            let td = document.createElement("td")
+            td.innerHTML = tdArr[tdNum];
+            tr.appendChild(td);
+        }
+        let buttonMes = document.createElement("button");
+        buttonMes.setAttribute("onclick","jump('"+id+"')");
+        buttonMes.setAttribute("class","btn");
+        buttonMes.innerHTML = "<a href='./message.html'>跨團隊留言板</a>"
+        // buttonMes.innerHTML = "<a href='https://sites.google.com/view/hospital-pain-management/hospitalmessage'>跨團隊留言板</a>"
+
+        
+        let buttonInfo = document.createElement("button");
+        buttonInfo.setAttribute("id","info");
+        
+
+        buttonInfo.setAttribute("class","btn");
+        buttonInfo.innerHTML = "<a href='10.97.20.206/sdcard/napps/0/main.app#"+id+"-'>查看病人資料</a>"
+
+            
+
+        let td = document.createElement("td")
+        td.appendChild(buttonMes);
+        td.appendChild(buttonInfo);
+        tr.appendChild(td);
+        return tr;
+    }
+    
+    function showMeet(){
+
+        let url = "https://sheets.googleapis.com/v4/spreadsheets/1h0Q84t8Q6GvPLntde07T1s8uL8lOCXFa15Xs8oczj0A/values/住院Meet?key=AIzaSyBAnKuvS0GKWZLDF5WO6doy9sFcGtI2YsQ";
+
+        $.getJSON(url, function(json) {
+            let hospitalMeet = json.values; // 所有試算表資料
+            for(let meetNum = 1; meetNum < hospitalMeet.length; meetNum ++){
+                let date = hospitalMeet[meetNum][0];
+                // date = date.toString();
+                // let nowYear = parseInt(new Date().getFullYear());
+                // let nowMonth = parseInt(new Date().getMonth(),10)+1;
+                // let nowDate = parseInt(new Date().getDate());
+                // let date1 = nowYear.toString()+"/"+nowMonth.toString()+"/"+nowDate.toString();
+                // let getYear = yearChange(date);
+                // let date2 = getYear.toString()+"/"+date.charAt(3)+date.charAt(4)+"/"+date.charAt(5)+date.charAt(6)
+                // let result = diff(date1,date2,"day")
+                // if(result<=0){
+                    let hospitalMeetTable = document.getElementById("hospitalMeetTable");
+                    let meetTr = document.createElement("tr");
+                    let dateTd = document.createElement("td");
+                    let linkTd = document.createElement("td");
+                    dateTd.innerHTML = hospitalMeet[meetNum][0];
+                    let a = document.createElement("a")
+                    a.setAttribute("href",hospitalMeet[meetNum][1])
+                    a.innerHTML = hospitalMeet[meetNum][1];
+                    linkTd.appendChild(a)
+                    // linkTd.innerHTML = meetJson[meetNum].link;
+                    meetTr.appendChild(dateTd)
+                    meetTr.appendChild(linkTd)
+                    hospitalMeetTable.appendChild(meetTr)
+                // }
+            }
+        });
+    }
+
+    showMeet()
+
+    showClinicData();
+    
+
+    function jump(patientID){
+        localStorage.setItem("patientID", patientID);
+        window.location.href="./message.html";
+        // parent.postMessage('patientID', 'https://sites.google.com/view/hospital-pain-management/');
+    };
+
+    // function search(){
+    //     let table = document.getElementById("hospitalTable")
+    //     for(let patientNum = 0; patientNum < json.length; patientNum++){
+    //         let tr = document.createElement("tr")
+    //         let caseDate = json[patientNum].caseDate
+    //         let id = json[patientNum].id
+    //         let name = json[patientNum].name
+    //         let bed = json[patientNum].bed
+    //         let inDate = json[patientNum].inDate
+    //         let symptom = json[patientNum].symptom
+    //         let casePainNum = json[patientNum].casePainNum
+    //         let todayPainNum = json[patientNum].todayPainNum
+    //         let meetDate = json[patientNum].meetDate
+    //         let endDate = json[patientNum].endDate
+    //         let outDate = json[patientNum].outDate
+    //         let tdArr = [caseDate,id,name,bed,inDate,symptom,casePainNum,todayPainNum,meetDate,endDate,outDate]
+    //         for(let tdNum = 0; tdNum < tdArr.length; tdNum ++){
+    //             let td = document.createElement("td")
+    //             td.innerHTML = tdArr[tdNum];
+    //             tr.appendChild(td);
+    //         }
+    //         let buttonMes = document.createElement("button");
+    //         buttonMes.setAttribute("onclick","jump('"+id+"')");
+    //         buttonMes.setAttribute("class","btn");
+    //         buttonMes.innerHTML = "跨團隊留言板<a href='./message.html'></a>"
+            
+    //         let buttonInfo = document.createElement("button");
+    //         buttonInfo.setAttribute("id","info");
+    //         // buttonInfo.setAttribute("onclick","jump('"+id+"')");
+    //         // buttonInfo.setAttribute("onclick","a()");
+
+    //         buttonInfo.setAttribute("class","btn");
+    //         buttonInfo.innerHTML = "查看病人資料<a href='./message.html'></a>"
+
+    //         let td = document.createElement("td")
+    //         td.appendChild(buttonMes);
+    //         td.appendChild(buttonInfo);
+    //         tr.appendChild(td);
+    //         table.appendChild(tr);
+
+    //         // let c = document.createElement("tr")
+    //         // let v = document.createElement("td")
+    //         // v.setAttribute("colspan","12")
+    //         // v.innerHTML = "111"
+    //         // c.appendChild(v);
+    //         // table.appendChild(c);
+    //     }
+        
+    // }
+
+    function date(date){
+        let slash = 1;
+        let strArr = []
+        for(let strNum = date.length-1; strNum >= 0; strNum--){
+            strArr.unshift(date.charAt(strNum));
+            if(slash==2 || slash==4){
+                strArr.unshift("/")
+            }
+            slash+=1;
+        }
+        let newDate = strArr.join("")
+        return(newDate)
+    }
+
+    function ADYear(date){
+        let hundred = parseInt(date.charAt(0))*100;
+        let ten = parseInt(date.charAt(1))*10;
+        let one = parseInt(date.charAt(2));
+        let year = hundred+ten+one+1911
+        year = year.toString()
+        let month = parseInt(date.charAt(3))*10 + parseInt(date.charAt(4))
+        month = month.toString();
+
+        let day = parseInt(date.charAt(5))*10 + parseInt(date.charAt(6))
+        day = day.toString();
+
+        let newYear = year+"/"+month+"/"+day
+        return newYear;
+    }
+    
+    
+    // function initArr(){
+    //     clickArr = [];
+    //     clickFlag = 1;
+    //     for(let infoNum = 0; infoNum <= values.length; infoNum++){
+    //         clickArr.push(0)
+    //     }
+    // }
+    
+    
+    
+    // $("#hospitalTable").on('click','#info',function(){
+    //獲得當前行
+        // let currentRow=$(this).closest("tr"); 
+        // let currentRowIndex = currentRow.index();
+        // if(clickArr[currentRowIndex] != 0){
+        //     return;
+        // }
+        // else{
+            // let rowInfo = document.getElementById("hospitalTable").insertRow(currentRowIndex+1);
+            // let cellInfo = rowInfo.insertCell(0);
+            // let pId = currentRow.find('td:eq(1)').text();
+            // cellInfo.setAttribute("colspan","12"); 
+            // let a = document.createElement("a");
+            // a.setAttribute("href","10.97.20.206/sdcard/napps/0/main.app#"+pId+"-")
+            // a.innerHTML = "10.97.20.206/sdcard/napps/0/main.app#"+pId+"-";
+            // cellInfo.appendChild(a);
+            // clickArr[currentRowIndex] = 1
+        // }
+        
+    // });
+
+    function diff (date1, date2, func) { // date1 和 date2 是 2016/06/18 格式
+        if(func=="day"){
+            let strDate, oDate1, oDate2, result
+            strDate = date1.split("/");
+            oDate1 = new Date(strDate[1] + '/' + strDate[2] + '/' + strDate[0]);
+            strDate = date2.split("/");
+            oDate2 = new Date(strDate[1] + '/' + strDate[2] + '/' + strDate[0]);
+            result = parseInt((oDate1 - oDate2) / 1000 / 60 / 60 / 24); // 把相差的毫秒數轉換為天數
+            return result;
+        }
+        else if(func=="hour"){
+            let strDate, oDate1, oDate2, result
+            strDate = date1.split("/");
+            oDate1 = new Date(strDate[1] + '/' + strDate[2] + '/' + strDate[0]);
+            strDate = date2.split("/");
+            oDate2 = new Date(strDate[1] + '/' + strDate[2] + '/' + strDate[0]);
+            result = parseInt((oDate1 - oDate2) / 1000 / 60 / 60); // 把相差的毫秒數轉換為天數
+            return result;
+        }
+        
+    };
+
+    function yearChange(date){
+        let year = parseInt(date.charAt(0))*100+parseInt(date.charAt(1))*10+parseInt(date.charAt(2))
+        year+=1911;
+        return year;
+    }
+
+    
+</script>
+
+</html>
